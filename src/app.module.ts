@@ -2,10 +2,8 @@ import { Module, NestModule, MiddlewareConsumer } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { CartModule } from './cart/cart.module';
+import { MealEntryModule } from './meal-entry/meal-entry.module';
 import { LoggerMiddleware } from './common/middleware/logger.middleware';
-import { ScheduleModule } from '@nestjs/schedule';
-import { BullModule } from '@nestjs/bullmq';
 
 @Module({
   imports: [
@@ -13,14 +11,7 @@ import { BullModule } from '@nestjs/bullmq';
     ConfigModule.forRoot({
       isGlobal: true,
     }),
-    CartModule,
-    ScheduleModule.forRoot(),
-    BullModule.forRoot({
-      connection: {
-        host: 'localhost',
-        port: 6379,
-      },
-    }),
+    MealEntryModule,
   ],
   controllers: [AppController],
   providers: [AppService],
