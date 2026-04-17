@@ -25,4 +25,10 @@ export class MealEntryFoodService {
 
     return mealEntryFoods;
   }
+
+  async deleteMealEntryFood(id: number) {
+    await this.prisma.mealEntryFood.delete({
+      where: { id },
+    });
+  }
 }
