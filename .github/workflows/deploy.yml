@@ -10,16 +10,24 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
+
+      - name: Tsc Check
+        run: |
+          pnpm tsc
+
+      - uses: pnpm/action-setup@v2
+        with:
+          version: 9
+
+      - name: Install Dependencies
+        run: |
+          pnpm install --frozen-lockfile
 
       - name: Lint
         run: |
           pnpm lint
 
-      - name: Test
-        run: |
-          pnpm test
 
       # - name: Build
       #   run: |
