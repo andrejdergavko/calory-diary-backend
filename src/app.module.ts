@@ -3,7 +3,9 @@ import { ConfigModule } from '@nestjs/config';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
 import { MealEntryModule } from './meal-entry/meal-entry.module';
+import { AIModule } from './ai/ai.module';
 import { LoggerMiddleware } from './common/middleware/logger.middleware';
+import { MealEntryFoodModule } from './meal-entry-food/meal-entry-food.module';
 
 @Module({
   imports: [
@@ -12,6 +14,8 @@ import { LoggerMiddleware } from './common/middleware/logger.middleware';
       isGlobal: true,
     }),
     MealEntryModule,
+    MealEntryFoodModule,
+    AIModule,
   ],
   controllers: [AppController],
   providers: [AppService],

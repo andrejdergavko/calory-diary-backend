@@ -1,17 +1,21 @@
 import { Injectable, Logger } from '@nestjs/common';
-import type { MealEntry } from '../generated/prisma/client';
+import { MealType, type MealEntry } from '../generated/prisma/client';
 import { PrismaService } from '../prisma.service';
-// import { SetMealEntryDto } from './dto/set-meal-entry.dto';
+import { ProcessMealEntryDto } from './dto/process-meal-entry.dto';
+import { MealEntryFoodService } from 'src/meal-entry-food/meal-entry-food.service';
+import { AIService } from 'src/ai/ai.service';
 
 @Injectable()
 export class MealEntryService {
   private readonly logger = new Logger(MealEntryService.name);
 
-  constructor(private readonly prisma: PrismaService) {}
+  constructor(
+    private readonly prisma: PrismaService,
+    private readonly mealEntryFoodService: MealEntryFoodService,
+    private readonly aiService: AIService,
+  ) {}
 
   getMealEntries(): Promise<MealEntry[]> {
-    this.logger.log(`Fetching meal entries for user ${1}`);
-
     const mealEntries = this.prisma.mealEntry.findMany({
       where: { userId: 1 },
       orderBy: { loggedAt: 'desc' },
@@ -23,32 +27,33 @@ export class MealEntryService {
     return mealEntries;
   }
 
-  // async setMealEntry(dto: SetMealEntryDto): Promise<MealEntry> {
-  //   this.logger.log(
-  //     `Setting meal entry for user ${dto.userId} at ${dto.loggedAt}`,
-  //   );
+  async processMealEntry(payload: ProcessMealEntryDto): Promise<MealEntry> {
+    const todayFoods =
+      await this.mealEntryFoodService.getMealEntryFoodsForToday();
 
-  //   const mealEntry = await this.prisma.mealEntry.create({
-  //     data: {
-  //       userId: dto.userId,
-  //       mealType: dto.mealType,
-  //       loggedAt: new Date(dto.loggedAt),
-  //       foods: {
-  //         create: dto.foods.map((food) => ({
-  //           name: food.name,
-  //           quantity: food.quantity,
-  //           calories: food.calories,
-  //           protein: food.protein,
-  //           fat: food.fat,
-  //           carbs: food.carbs,
-  //         })),
-  //       },
-  //     },
-  //     include: {
-  //       foods: true,
-  //     },
-  //   });
+    const aiResponse = await this.aiService.processMealEntry(
+      payload.text,
+      todayFoods,
+    );
 
-  //   return mealEntry;
-  // }
+    const mealEntry = await this.prisma.mealEntry.create({
+      data: {
+        userId: 1,
+        loggedAt: new Date(),
+        mealType: MealType.BREAKFAST,
+        foods: {
+          create: aiResponse.map((food) => ({
+            name: food.name,
+            quantity: food.quantity,
+            calories: food.calories,
+            protein: food.protein,
+            fat: food.fat,
+            carbs: food.carbs,
+          })),
+        },
+      },
+    });
+
+    return mealEntry;
+  }
 }
