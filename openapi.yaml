@@ -1,0 +1,989 @@
+openapi: 3.0.0
+info:
+  title: Market API
+  version: 1.0.0
+  description: API для управления продуктами и пользователями маркетплейса
+  contact:
+    name: API Support
+    email: support@market.local
+servers:
+  - url: http://localhost:3000
+    description: Development server
+paths:
+  /auth/register:
+    post:
+      tags:
+        - Auth
+      summary: Регистрация нового пользователя
+      description: Регистрирует нового пользователя в системе. Пароль хешируется и хранится безопасно. Проверяется, что пользователь с таким email не существует.
+      operationId: registerUser
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/RegisterRequest'
+            examples:
+              example1:
+                value:
+                  email: john@example.com
+                  name: John Doe
+                  password: password123
+      responses:
+        '201':
+          description: Пользователь успешно зарегистрирован
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+              examples:
+                success:
+                  value:
+                    id: 1
+                    email: john@example.com
+                    name: John Doe
+        '400':
+          description: Ошибка валидации данных
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationErrorResponse'
+              examples:
+                example1:
+                  value:
+                    statusCode: 400
+                    message:
+                      - Email должен быть валидным email адресом
+                      - Name должен быть строкой
+                      - Password должен быть строкой
+                      - Password должен быть минимум 6 символов
+                    error: Bad Request
+        '409':
+          description: Пользователь с таким email уже зарегистрирован
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                example1:
+                  value:
+                    statusCode: 409
+                    message: User with this email already registered
+                    error: Conflict
+        '500':
+          description: Ошибка сервера
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /auth/login:
+    post:
+      tags:
+        - Auth
+      summary: Вход в систему
+      description: Аутентифицирует пользователя по email и пароль. Если учетные данные верны, возвращает JWT токен доступа.
+      operationId: loginUser
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/LoginRequest'
+            examples:
+              example1:
+                value:
+                  email: john@example.com
+                  password: password123
+      responses:
+        '200':
+          description: Пользователь успешно вошел в систему
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LoginResponse'
+              examples:
+                success:
+                  value:
+                    access_token: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImpvaG5AZXhhbXBsZS5jb20iLCJpYXQiOjE2OTA5NTMyMDAsImV4cCI6MTY5MTA0OTIwMH0.BQv0Y4r5wQM
+        '400':
+          description: Ошибка валидации данных
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationErrorResponse'
+              examples:
+                example1:
+                  value:
+                    statusCode: 400
+                    message:
+                      - Email должен быть валидным email адресом
+                      - Password должен быть строкой
+                      - Password должен быть минимум 6 символов
+                    error: Bad Request
+        '401':
+          description: Неверный email или пароль
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                example1:
+                  value:
+                    statusCode: 401
+                    message: Invalid email or password
+                    error: Unauthorized
+        '500':
+          description: Ошибка сервера
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /auth/profile:
+    get:
+      tags:
+        - Auth
+      summary: Получить профиль текущего пользователя
+      description: Возвращает профиль пользователя на основе JWT токена в заголовке Authorization
+      operationId: getProfile
+      security:
+        - bearerAuth: []
+      responses:
+        '200':
+          description: Профиль пользователя успешно получен
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+              examples:
+                success:
+                  value:
+                    id: 1
+                    email: john@example.com
+                    name: John Doe
+        '401':
+          description: Токен не предоставлен или недействителен
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                example1:
+                  value:
+                    statusCode: 401
+                    message: Unauthorized
+                    error: Unauthorized
+        '500':
+          description: Ошибка сервера
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /queues/test-job:
+    post:
+      tags:
+        - Queues
+      summary: Добавить задачу в тестовую очередь
+      description: Добавляет новую задачу в очередь для фоновой обработки. Задача будет обработана с повторными попытками при ошибке.
+      operationId: addTestJob
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TestJobRequest'
+            examples:
+              example1:
+                value:
+                  message: Process this task
+      responses:
+        '201':
+          description: Задача успешно добавлена в очередь
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/QueueResponse'
+              examples:
+                success:
+                  value:
+                    message: Job added to queue successfully
+        '400':
+          description: Ошибка валидации данных
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationErrorResponse'
+        '500':
+          description: Ошибка сервера
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /queues/status:
+    get:
+      tags:
+        - Queues
+      summary: Получить статус очереди
+      description: Возвращает информацию о количестве задач в различных состояниях
+      operationId: getQueueStatus
+      responses:
+        '200':
+          description: Статус очереди успешно получен
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/QueueStatus'
+              examples:
+                success:
+                  value:
+                    waitingCount: 5
+                    activeCount: 2
+                    completedCount: 42
+                    failedCount: 1
+        '500':
+          description: Ошибка сервера
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /products:
+    get:
+      tags:
+        - Products
+      summary: Получить все продукты
+      description: Возвращает список всех доступных продуктов
+      operationId: findAllProducts
+      responses:
+        '200':
+          description: Успешно получен список продуктов
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Product'
+              examples:
+                success:
+                  value:
+                    - id: 1
+                      name: Laptop
+                      price: 999.99
+                      stock: 5
+                      categoryId: 1
+                    - id: 2
+                      name: Mouse
+                      price: 29.99
+                      stock: 100
+                      categoryId: 2
+        '500':
+          description: Ошибка сервера
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+    post:
+      tags:
+        - Products
+      summary: Создать новый продукт
+      description: Добавляет новый продукт в каталог
+      operationId: createProduct
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateProductRequest'
+            examples:
+              example1:
+                value:
+                  name: Laptop Pro
+                  price: 1299.99
+                  stock: 10
+                  categoryId: 1
+      responses:
+        '201':
+          description: Продукт успешно создан
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Product'
+              examples:
+                success:
+                  value:
+                    id: 3
+                    name: Laptop Pro
+                    price: 1299.99
+                    stock: 10
+                    categoryId: 1
+        '400':
+          description: Ошибка валидации данных
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationErrorResponse'
+              examples:
+                example1:
+                  value:
+                    statusCode: 400
+                    message:
+                      - Name должен быть строкой
+                      - Price должен быть числом
+                      - Price должен быть не меньше 0
+                      - Stock должен быть числом
+                      - Stock должен быть не меньше 0
+                      - CategoryId должен быть числом
+                    error: Bad Request
+        '500':
+          description: Ошибка сервера
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /products/{id}:
+    get:
+      tags:
+        - Products
+      summary: Получить продукт по ID
+      description: Возвращает детальную информацию о конкретном продукте
+      operationId: findOneProduct
+      parameters:
+        - name: id
+          in: path
+          description: ID продукта
+          required: true
+          schema:
+            type: integer
+            format: int32
+            minimum: 1
+          example: 1
+      responses:
+        '200':
+          description: Продукт успешно найден
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Product'
+              examples:
+                success:
+                  value:
+                    id: 1
+                    name: Laptop
+                    price: 999.99
+                    stock: 5
+                    categoryId: 1
+        '400':
+          description: Неверный ID (не целое число)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+              examples:
+                example1:
+                  value:
+                    statusCode: 400
+                    message: Validation failed (numeric string is expected)
+                    error: Bad Request
+        '404':
+          description: Продукт не найден
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Ошибка сервера
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+    put:
+      tags:
+        - Products
+      summary: Обновить продукт
+      description: Обновляет информацию о существующем продукте (частичное обновление)
+      operationId: updateProduct
+      parameters:
+        - name: id
+          in: path
+          description: ID продукта
+          required: true
+          schema:
+            type: integer
+            format: int32
+            minimum: 1
+          example: 1
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateProductRequest'
+            examples:
+              example1:
+                value:
+                  name: Laptop Pro Max
+                  price: 1499.99
+              example2:
+                value:
+                  stock: 15
+      responses:
+        '200':
+          description: Продукт успешно обновлен
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Product'
+              examples:
+                success:
+                  value:
+                    id: 1
+                    name: Laptop Pro Max
+                    price: 1499.99
+                    stock: 15
+                    categoryId: 1
+        '400':
+          description: Ошибка валидации данных
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationErrorResponse'
+        '404':
+          description: Продукт не найден
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Ошибка сервера
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+    delete:
+      tags:
+        - Products
+      summary: Удалить продукт
+      description: Удаляет продукт из каталога
+      operationId: deleteProduct
+      parameters:
+        - name: id
+          in: path
+          description: ID продукта
+          required: true
+          schema:
+            type: integer
+            format: int32
+            minimum: 1
+          example: 1
+      responses:
+        '200':
+          description: Продукт успешно удален
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Product'
+              examples:
+                success:
+                  value:
+                    id: 1
+                    name: Laptop
+                    price: 999.99
+                    stock: 5
+                    categoryId: 1
+        '400':
+          description: Неверный ID (не целое число)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Продукт не найден
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Ошибка сервера
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+  /users/{id}:
+    get:
+      tags:
+        - Users
+      summary: Получить пользователя по ID
+      description: Возвращает информацию о конкретном пользователе
+      operationId: findOneUser
+      parameters:
+        - name: id
+          in: path
+          description: ID пользователя
+          required: true
+          schema:
+            type: integer
+            format: int32
+            minimum: 1
+          example: 1
+      responses:
+        '200':
+          description: Пользователь успешно найден
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+              examples:
+                success:
+                  value:
+                    id: 1
+                    email: john@example.com
+                    name: John Doe
+        '400':
+          description: Неверный ID (не целое число)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Пользователь не найден
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Ошибка сервера
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+    put:
+      tags:
+        - Users
+      summary: Обновить пользователя
+      description: Обновляет информацию о существующем пользователе (частичное обновление)
+      operationId: updateUser
+      parameters:
+        - name: id
+          in: path
+          description: ID пользователя
+          required: true
+          schema:
+            type: integer
+            format: int32
+            minimum: 1
+          example: 1
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/UpdateUserRequest'
+            examples:
+              example1:
+                value:
+                  name: Jane Doe
+              example2:
+                value:
+                  email: jane@example.com
+      responses:
+        '200':
+          description: Пользователь успешно обновлен
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+              examples:
+                success:
+                  value:
+                    id: 1
+                    email: jane@example.com
+                    name: Jane Doe
+        '400':
+          description: Ошибка валидации данных
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ValidationErrorResponse'
+        '404':
+          description: Пользователь не найден
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Ошибка сервера
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+    delete:
+      tags:
+        - Users
+      summary: Удалить пользователя
+      description: Удаляет пользователя из системы
+      operationId: deleteUser
+      parameters:
+        - name: id
+          in: path
+          description: ID пользователя
+          required: true
+          schema:
+            type: integer
+            format: int32
+            minimum: 1
+          example: 1
+      responses:
+        '200':
+          description: Пользователь успешно удален
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/User'
+              examples:
+                success:
+                  value:
+                    id: 1
+                    email: john@example.com
+                    name: John Doe
+        '400':
+          description: Неверный ID (не целое число)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '404':
+          description: Пользователь не найден
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+        '500':
+          description: Ошибка сервера
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ErrorResponse'
+
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+      description: JWT токен для авторизации. Получить токен можно через эндпоинт /auth/login
+  schemas:
+    Product:
+      type: object
+      required:
+        - id
+        - name
+        - price
+        - stock
+        - categoryId
+      properties:
+        id:
+          type: integer
+          format: int32
+          description: Уникальный идентификатор продукта
+          example: 1
+        name:
+          type: string
+          description: Название продукта
+          example: Laptop
+        price:
+          type: number
+          format: double
+          description: Цена продукта
+          minimum: 0
+          example: 999.99
+        stock:
+          type: integer
+          format: int32
+          description: Количество товара на складе
+          minimum: 0
+          example: 5
+        categoryId:
+          type: integer
+          format: int32
+          description: ID категории продукта
+          example: 1
+
+    User:
+      type: object
+      required:
+        - id
+        - email
+        - name
+      properties:
+        id:
+          type: integer
+          format: int32
+          description: Уникальный идентификатор пользователя
+          example: 1
+        email:
+          type: string
+          format: email
+          description: Email адрес пользователя
+          example: john@example.com
+        name:
+          type: string
+          description: Имя пользователя
+          example: John Doe
+
+    CreateProductRequest:
+      type: object
+      required:
+        - name
+        - price
+        - stock
+        - categoryId
+      properties:
+        name:
+          type: string
+          description: Название продукта
+          example: Laptop Pro
+          minLength: 1
+        price:
+          type: number
+          format: double
+          description: Цена продукта (должна быть не меньше 0)
+          minimum: 0
+          example: 1299.99
+        stock:
+          type: integer
+          format: int32
+          description: Количество товара на складе (должно быть не меньше 0)
+          minimum: 0
+          example: 10
+        categoryId:
+          type: integer
+          format: int32
+          description: ID категории продукта
+          example: 1
+
+    UpdateProductRequest:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Название продукта (опционально)
+          example: Laptop Pro Max
+          minLength: 1
+        price:
+          type: number
+          format: double
+          description: Цена продукта (опционально, должна быть не меньше 0)
+          minimum: 0
+          example: 1499.99
+        stock:
+          type: integer
+          format: int32
+          description: Количество товара на складе (опционально, должно быть не меньше 0)
+          minimum: 0
+          example: 15
+        categoryId:
+          type: integer
+          format: int32
+          description: ID категории продукта (опционально)
+          example: 1
+
+    CreateUserRequest:
+      type: object
+      required:
+        - email
+        - name
+        - password
+      properties:
+        email:
+          type: string
+          format: email
+          description: Email адрес пользователя (должен быть валидным)
+          example: john@example.com
+        name:
+          type: string
+          description: Имя пользователя
+          example: John Doe
+          minLength: 1
+        password:
+          type: string
+          format: password
+          description: Пароль пользователя (минимум 6 символов)
+          minLength: 6
+          example: password123
+
+    RegisterRequest:
+      type: object
+      required:
+        - email
+        - name
+        - password
+      properties:
+        email:
+          type: string
+          format: email
+          description: Email адрес пользователя (должен быть валидным)
+          example: john@example.com
+        name:
+          type: string
+          description: Имя пользователя
+          example: John Doe
+          minLength: 1
+        password:
+          type: string
+          format: password
+          description: Пароль пользователя (минимум 6 символов)
+          minLength: 6
+          example: password123
+
+    LoginRequest:
+      type: object
+      required:
+        - email
+        - password
+      properties:
+        email:
+          type: string
+          format: email
+          description: Email адрес пользователя (должен быть валидным)
+          example: john@example.com
+        password:
+          type: string
+          format: password
+          description: Пароль пользователя (минимум 6 символов)
+          minLength: 6
+          example: password123
+
+    LoginResponse:
+      type: object
+      required:
+        - access_token
+      properties:
+        access_token:
+          type: string
+          description: JWT токен доступа
+          example: eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJlbWFpbCI6ImpvaG5AZXhhbXBsZS5jb20iLCJpYXQiOjE2OTA5NTMyMDAsImV4cCI6MTY5MTA0OTIwMH0.BQv0Y4r5wQM
+
+    UpdateUserRequest:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+          description: Email адрес пользователя (опционально, должен быть валидным)
+          example: jane@example.com
+        name:
+          type: string
+          description: Имя пользователя (опционально)
+          example: Jane Doe
+          minLength: 1
+
+    ErrorResponse:
+      type: object
+      properties:
+        statusCode:
+          type: integer
+          format: int32
+          description: HTTP статус код
+          example: 500
+        message:
+          type: string
+          description: Сообщение об ошибке
+          example: Internal Server Error
+        error:
+          type: string
+          description: Тип ошибки
+          example: Internal Server Error
+
+    ValidationErrorResponse:
+      type: object
+      properties:
+        statusCode:
+          type: integer
+          format: int32
+          description: HTTP статус код
+          example: 400
+        message:
+          type: array
+          items:
+            type: string
+          description: Массив сообщений об ошибках валидации
+          example:
+            - Name должен быть строкой
+            - Price должен быть числом
+        error:
+          type: string
+          description: Тип ошибки
+          example: Bad Request
+
+    TestJobRequest:
+      type: object
+      required:
+        - message
+      properties:
+        message:
+          type: string
+          description: Сообщение для обработки в задаче
+          example: Process this task
+          minLength: 1
+        timestamp:
+          type: string
+          format: date-time
+          description: Время создания задачи (опционально)
+          example: '2026-02-04T12:00:00Z'
+
+    QueueResponse:
+      type: object
+      properties:
+        message:
+          type: string
+          description: Статус операции
+          example: Job added to queue successfully
+
+    QueueStatus:
+      type: object
+      required:
+        - waitingCount
+        - activeCount
+        - completedCount
+        - failedCount
+      properties:
+        waitingCount:
+          type: integer
+          format: int32
+          description: Количество задач в ожидании
+          example: 5
+        activeCount:
+          type: integer
+          format: int32
+          description: Количество активно обрабатываемых задач
+          example: 2
+        completedCount:
+          type: integer
+          format: int32
+          description: Количество успешно выполненных задач
+          example: 42
+        failedCount:
+          type: integer
+          format: int32
+          description: Количество задач с ошибками
+          example: 1
+
+tags:
+  - name: Auth
+    description: Операции аутентификации и регистрации
+  - name: Products
+    description: Операции с продуктами
+  - name: Users
+    description: Операции с пользователями
+  - name: Queues
+    description: Операции с очередями задач (BullMQ)
