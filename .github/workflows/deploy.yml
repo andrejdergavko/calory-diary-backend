@@ -1,32 +1,26 @@
-name: Deploy NestJS
+name: CI/CD
 
 on:
   push:
-    branches:
-      - main
+    branches: [main]
+  pull_request:
+    branches: [main]
 
 jobs:
-  deploy:
+  ci-app:
+    name: CI app
     runs-on: ubuntu-latest
-
     steps:
-      - uses: actions/checkout@v4
+      - name: Get repository code
+        uses: actions/checkout@v4
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+      - name: Type checking
+        run: pnpm tsc
+      - name: Linting
+        run: pnpm lint
 
-      - name: Tsc Check
-        run: |
-          pnpm tsc
 
-      - uses: pnpm/action-setup@v2
-        with:
-          version: 9
-
-      - name: Install Dependencies
-        run: |
-          pnpm install --frozen-lockfile
-
-      - name: Lint
-        run: |
-          pnpm lint
 
 
       # - name: Build
