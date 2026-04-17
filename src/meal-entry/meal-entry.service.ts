@@ -1,185 +1,54 @@
 import { Injectable, Logger } from '@nestjs/common';
+import type { MealEntry } from '../generated/prisma/client';
 import { PrismaService } from '../prisma.service';
-// import { MealEntry } from '../generated/prisma/client';
+// import { SetMealEntryDto } from './dto/set-meal-entry.dto';
 
 @Injectable()
 export class MealEntryService {
   private readonly logger = new Logger(MealEntryService.name);
 
-  constructor(private prisma: PrismaService) {}
+  constructor(private readonly prisma: PrismaService) {}
 
-  // /**
-  //  * Обеспечивает наличие корзины для пользователя
-  //  */
-  // async ensureCart(userId: number): Promise<Cart> {
-  //   return this.prisma.cart.upsert({
-  //     where: { userId },
-  //     update: {},
-  //     create: { userId },
-  //   });
-  // }
+  getMealEntries(): Promise<MealEntry[]> {
+    this.logger.log(`Fetching meal entries for user ${1}`);
 
-  // /**
-  //  * Добавляет товар в корзину или увеличивает количество
-  //  */
-  // async addItem(
-  //   userId: number,
-  //   productId: number,
-  //   quantity: number,
-  // ): Promise<Cart | null> {
-  //   // Проверяем, что товар существует
-  //   const product = await this.prisma.product.findUnique({
-  //     where: { id: productId },
-  //   });
+    const mealEntries = this.prisma.mealEntry.findMany({
+      where: { userId: 1 },
+      orderBy: { loggedAt: 'desc' },
+      include: {
+        foods: true,
+      },
+    });
 
-  //   if (!product) {
-  //     this.logger.warn(`Product with id: ${productId} not found`);
-  //     throw new NotFoundException(`Product with id ${productId} not found`);
-  //   }
+    return mealEntries;
+  }
 
-  //   // Гарантируем наличие корзины и добавляем товар в транзакции
-  //   return await this.prisma.$transaction(async (tx) => {
-  //     const cart = await tx.cart.upsert({
-  //       where: { userId },
-  //       update: {},
-  //       create: { userId },
-  //     });
+  // async setMealEntry(dto: SetMealEntryDto): Promise<MealEntry> {
+  //   this.logger.log(
+  //     `Setting meal entry for user ${dto.userId} at ${dto.loggedAt}`,
+  //   );
 
-  //     // Upsert для CartItem: если есть — увеличиваем quantity, если нет — создаём
-  //     await tx.cartItem.upsert({
-  //       where: {
-  //         cartId_productId: {
-  //           cartId: cart.id,
-  //           productId,
-  //         },
-  //       },
-  //       update: {
-  //         quantity: {
-  //           increment: quantity,
-  //         },
-  //       },
-  //       create: {
-  //         cartId: cart.id,
-  //         productId,
-  //         quantity,
-  //       },
-  //     });
-
-  //     // Возвращаем полную корзину с items и product
-  //     return tx.cart.findUnique({
-  //       where: { id: cart.id },
-  //       include: {
-  //         items: {
-  //           include: {
-  //             product: true,
-  //           },
-  //         },
-  //       },
-  //     });
-  //   });
-  // }
-
-  // /**
-  //  * Удаляет товар из корзины
-  //  */
-  // async removeItem(userId: number, productId: number): Promise<Cart | null> {
-  //   // Находим корзину
-  //   const cart = await this.prisma.cart.findUnique({
-  //     where: { userId },
-  //   });
-
-  //   if (!cart) {
-  //     this.logger.warn(`Cart for user ${userId} not found`);
-  //     throw new NotFoundException(`Cart not found for user ${userId}`);
-  //   }
-
-  //   // Проверяем наличие item перед удалением
-  //   const cartItem = await this.prisma.cartItem.findUnique({
-  //     where: {
-  //       cartId_productId: {
-  //         cartId: cart.id,
-  //         productId,
+  //   const mealEntry = await this.prisma.mealEntry.create({
+  //     data: {
+  //       userId: dto.userId,
+  //       mealType: dto.mealType,
+  //       loggedAt: new Date(dto.loggedAt),
+  //       foods: {
+  //         create: dto.foods.map((food) => ({
+  //           name: food.name,
+  //           quantity: food.quantity,
+  //           calories: food.calories,
+  //           protein: food.protein,
+  //           fat: food.fat,
+  //           carbs: food.carbs,
+  //         })),
   //       },
   //     },
-  //   });
-
-  //   if (!cartItem) {
-  //     this.logger.warn(
-  //       `CartItem not found for cart ${cart.id} and product ${productId}`,
-  //     );
-  //     throw new NotFoundException(
-  //       `Item with product id ${productId} not found in cart`,
-  //     );
-  //   }
-
-  //   // Удаляем item
-  //   await this.prisma.cartItem.delete({
-  //     where: {
-  //       cartId_productId: {
-  //         cartId: cart.id,
-  //         productId,
-  //       },
-  //     },
-  //   });
-
-  //   // Возвращаем полную корзину с items и product
-  //   return this.prisma.cart.findUnique({
-  //     where: { id: cart.id },
   //     include: {
-  //       items: {
-  //         include: {
-  //           product: true,
-  //         },
-  //       },
+  //       foods: true,
   //     },
   //   });
-  // }
 
-  // /**
-  //  * Очищает корзину (удаляет все items)
-  //  */
-  // async clear(userId: number): Promise<Cart | null> {
-  //   // Находим корзину
-  //   const cart = await this.prisma.cart.findUnique({
-  //     where: { userId },
-  //   });
-
-  //   if (!cart) {
-  //     this.logger.warn(`Cart for user ${userId} not found`);
-  //     throw new NotFoundException(`Cart not found for user ${userId}`);
-  //   }
-
-  //   // Удаляем все items
-  //   await this.prisma.cartItem.deleteMany({
-  //     where: { cartId: cart.id },
-  //   });
-
-  //   // Возвращаем пустую корзину
-  //   return this.prisma.cart.findUnique({
-  //     where: { id: cart.id },
-  //     include: {
-  //       items: {
-  //         include: {
-  //           product: true,
-  //         },
-  //       },
-  //     },
-  //   });
-  // }
-
-  // /**
-  //  * Получает корзину пользователя
-  //  */
-  // async getCart(userId: number): Promise<Cart | null> {
-  //   return this.prisma.cart.findUnique({
-  //     where: { userId },
-  //     include: {
-  //       items: {
-  //         include: {
-  //           product: true,
-  //         },
-  //       },
-  //     },
-  //   });
+  //   return mealEntry;
   // }
 }
