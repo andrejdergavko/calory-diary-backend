@@ -12,7 +12,6 @@ generator client {
 
 datasource db {
   provider = "postgresql"
-
 }
 
 enum Role {
@@ -20,17 +19,46 @@ enum Role {
   ADMIN
 }
 
+enum MealType {
+  BREAKFAST
+  LUNCH
+  DINNER
+}
+
 model User {
-  id              Int       @default(autoincrement()) @id
-  email           String    @unique
-  name            String
-  hashedPassword  String
-  role            Role      @default(USER)
-  
+  id                 Int          @id @default(autoincrement())
+  email              String       @unique
+  name               String
+  hashedPassword     String
+  role               Role         @default(USER)
+  dailyCalorieTarget Int?
+  createdAt          DateTime     @default(now())
+  updatedAt          DateTime     @updatedAt
+  mealEntries        MealEntry[]
 }
 
-model Category {
-  id       Int       @default(autoincrement()) @id
-  name     String    @unique
+model MealEntry {
+  id            Int             @id @default(autoincrement())
+  userId        Int
+  user          User            @relation(fields: [userId], references: [id])
+  loggedAt      DateTime
+  mealType      MealType
+  createdAt     DateTime        @default(now())
+  updatedAt     DateTime        @updatedAt
+  foods         MealEntryFood[]
+
+  @@index([userId, loggedAt])
 }
 
+model MealEntryFood {
+  id          Int        @id @default(autoincrement())
+  mealEntryId Int
+  mealEntry   MealEntry  @relation(fields: [mealEntryId], references: [id])
+  name        String
+  quantity    Float
+  calories    Int
+  protein     Int
+  fat         Int
+  carbs       Int
+  createdAt   DateTime   @default(now())
+}
