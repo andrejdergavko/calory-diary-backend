@@ -2,15 +2,10 @@ import { Module, NestModule, MiddlewareConsumer } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { UsersModule } from './users/users.module';
-import { ProductsModule } from './products/products.module';
-import { AuthModule } from './auth/auth.module';
 import { CartModule } from './cart/cart.module';
 import { LoggerMiddleware } from './common/middleware/logger.middleware';
 import { ScheduleModule } from '@nestjs/schedule';
-import { TasksModule } from './tasks/tasks.module';
 import { BullModule } from '@nestjs/bullmq';
-import { QueuesModule } from './queues/queues.module';
 
 @Module({
   imports: [
@@ -18,12 +13,7 @@ import { QueuesModule } from './queues/queues.module';
     ConfigModule.forRoot({
       isGlobal: true,
     }),
-    UsersModule,
-    ProductsModule,
-    AuthModule,
     CartModule,
-    TasksModule,
-    QueuesModule,
     ScheduleModule.forRoot(),
     BullModule.forRoot({
       connection: {

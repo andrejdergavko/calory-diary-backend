@@ -6,12 +6,10 @@ import {
   Body,
   Param,
   ParseIntPipe,
-  UseGuards,
   Request,
 } from '@nestjs/common';
 import { CartService } from './cart.service';
 import { AddToCartDto } from './dto/add-to-cart.dto';
-import { JwtAuthGuard } from '../auth/guards/jwt-auth.guard';
 import { User } from '../generated/prisma/client';
 
 interface AuthenticatedRequest extends Request {
@@ -19,7 +17,6 @@ interface AuthenticatedRequest extends Request {
 }
 
 @Controller('cart')
-@UseGuards(JwtAuthGuard)
 export class CartController {
   constructor(private cartService: CartService) {}
 
