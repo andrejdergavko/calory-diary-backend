@@ -7,6 +7,11 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.setGlobalPrefix('api');
 
+  app.enableCors({
+    origin: 'http://localhost:3000',
+    methods: ['GET', 'HEAD', 'OPTIONS', 'POST', 'PUT', 'DELETE', 'PATCH'],
+  });
+
   // Регистрируем глобальный фильтр для обработки HTTP исключений
   app.useGlobalFilters(new HttpExceptionFilter());
 
