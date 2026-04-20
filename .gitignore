@@ -57,3 +57,8 @@ report.[0-9]*.[0-9]*.[0-9]*.[0-9]*.json
 
 .env
 # src/generated/prisma/*
+
+# code workspace
+calory-diary-backend.code-workspace
+.vscode/
+.vscode/settings.json
