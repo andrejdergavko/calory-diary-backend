@@ -14,8 +14,8 @@ export class AIService {
 
   constructor(
     private readonly config: ConfigService,
-    private readonly deepseekProvider: DeepseekProvider,
-    private readonly openAIProvider: OpenAIProvider,
+    deepseekProvider: DeepseekProvider,
+    openAIProvider: OpenAIProvider,
   ) {
     const configuredProvider =
       (this.config.get<AIModelName>('AI_PROVIDER') ?? 'deepseek') || 'deepseek';

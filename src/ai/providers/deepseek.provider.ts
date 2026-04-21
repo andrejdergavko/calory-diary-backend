@@ -15,9 +15,14 @@ export class DeepseekProvider implements AIModelProvider {
   private readonly client: OpenAI;
 
   constructor() {
+    const deepseekKey = process.env.DEEPSEEK_API_KEY;
+    if (!deepseekKey) {
+      throw new Error('DEEPSEEK_API_KEY is required to call Deepseek');
+    }
+
     this.client = new OpenAI({
       baseURL: 'https://api.deepseek.com',
-      apiKey: process.env.DEEPSEEK_API_KEY,
+      apiKey: deepseekKey,
     });
   }
 
