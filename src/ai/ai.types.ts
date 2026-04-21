@@ -1,4 +1,4 @@
-export interface ProcessedMealEntryFood {
+export interface ProcessedFoodEntry {
   name: string;
   quantity: number;
   calories: number;

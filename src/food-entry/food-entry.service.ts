@@ -1,20 +1,20 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { PrismaService } from '../prisma.service';
-import { MealEntryFood } from 'src/generated/prisma/client';
+import { FoodEntry } from 'src/generated/prisma/client';
 import { getDayBounds } from 'src/common/utils';
 
 @Injectable()
-export class MealEntryFoodService {
-  private readonly logger = new Logger(MealEntryFoodService.name);
+export class FoodEntryService {
+  private readonly logger = new Logger(FoodEntryService.name);
 
   constructor(private readonly prisma: PrismaService) {}
 
-  async getMealEntryFoodsForToday(): Promise<MealEntryFood[]> {
+  async getFoodEntrysForToday(): Promise<FoodEntry[]> {
     const { start, end } = getDayBounds(0);
 
-    const mealEntryFoods = await this.prisma.mealEntryFood.findMany({
+    const foodEntrys = await this.prisma.foodEntry.findMany({
       where: {
-        mealEntry: {
+        meal: {
           loggedAt: {
             gte: start,
             lt: end,
@@ -23,11 +23,11 @@ export class MealEntryFoodService {
       },
     });
 
-    return mealEntryFoods;
+    return foodEntrys;
   }
 
-  async deleteMealEntryFood(id: number) {
-    await this.prisma.mealEntryFood.delete({
+  async deleteFoodEntry(id: number) {
+    await this.prisma.foodEntry.delete({
       where: { id },
     });
   }

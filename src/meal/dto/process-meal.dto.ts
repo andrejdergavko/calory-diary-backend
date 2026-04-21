@@ -1,6 +1,6 @@
 import { IsNotEmpty, IsString } from 'class-validator';
 
-export class ProcessMealEntryDto {
+export class ProcessMealDto {
   @IsString()
   @IsNotEmpty()
   text: string;

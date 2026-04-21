@@ -34,10 +34,10 @@ model User {
   dailyCalorieTarget Int?
   createdAt          DateTime     @default(now())
   updatedAt          DateTime     @updatedAt
-  mealEntries        MealEntry[]
+  mealEntries        Meal[]
 }
 
-model MealEntry {
+model Meal {
   id            Int             @id @default(autoincrement())
   userId        Int
   user          User            @relation(fields: [userId], references: [id])
@@ -45,15 +45,15 @@ model MealEntry {
   mealType      MealType
   createdAt     DateTime        @default(now())
   updatedAt     DateTime        @updatedAt
-  foods         MealEntryFood[]
+  foods         FoodEntry[]
 
   @@index([userId, loggedAt])
 }
 
-model MealEntryFood {
+model FoodEntry {
   id          Int        @id @default(autoincrement())
-  mealEntryId Int
-  mealEntry   MealEntry  @relation(fields: [mealEntryId], references: [id])
+  mealId Int
+  meal   Meal  @relation(fields: [mealId], references: [id])
   name        String
   quantity    Float
   calories    Int

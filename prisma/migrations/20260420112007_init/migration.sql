@@ -19,7 +19,7 @@ CREATE TABLE "User" (
 );
 
 -- CreateTable
-CREATE TABLE "MealEntry" (
+CREATE TABLE "Meal" (
     "id" SERIAL NOT NULL,
     "userId" INTEGER NOT NULL,
     "loggedAt" TIMESTAMP(3) NOT NULL,
@@ -27,13 +27,13 @@ CREATE TABLE "MealEntry" (
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
     "updatedAt" TIMESTAMP(3) NOT NULL,
 
-    CONSTRAINT "MealEntry_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "Meal_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateTable
-CREATE TABLE "MealEntryFood" (
+CREATE TABLE "FoodEntry" (
     "id" SERIAL NOT NULL,
-    "mealEntryId" INTEGER NOT NULL,
+    "mealId" INTEGER NOT NULL,
     "name" TEXT NOT NULL,
     "quantity" DOUBLE PRECISION NOT NULL,
     "calories" INTEGER NOT NULL,
@@ -42,17 +42,17 @@ CREATE TABLE "MealEntryFood" (
     "carbs" INTEGER NOT NULL,
     "createdAt" TIMESTAMP(3) NOT NULL DEFAULT CURRENT_TIMESTAMP,
 
-    CONSTRAINT "MealEntryFood_pkey" PRIMARY KEY ("id")
+    CONSTRAINT "FoodEntry_pkey" PRIMARY KEY ("id")
 );
 
 -- CreateIndex
 CREATE UNIQUE INDEX "User_email_key" ON "User"("email");
 
 -- CreateIndex
-CREATE INDEX "MealEntry_userId_loggedAt_idx" ON "MealEntry"("userId", "loggedAt");
+CREATE INDEX "Meal_userId_loggedAt_idx" ON "Meal"("userId", "loggedAt");
 
 -- AddForeignKey
-ALTER TABLE "MealEntry" ADD CONSTRAINT "MealEntry_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "Meal" ADD CONSTRAINT "Meal_userId_fkey" FOREIGN KEY ("userId") REFERENCES "User"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
 
 -- AddForeignKey
-ALTER TABLE "MealEntryFood" ADD CONSTRAINT "MealEntryFood_mealEntryId_fkey" FOREIGN KEY ("mealEntryId") REFERENCES "MealEntry"("id") ON DELETE RESTRICT ON UPDATE CASCADE;
+ALTER TABLE "FoodEntry" ADD CONSTRAINT "FoodEntry_mealId_fkey" FOREIGN KEY ("mealId") REFERENCES "Meal"("id") ON DELETE RESTRICT ON UPDATE CASCADE;

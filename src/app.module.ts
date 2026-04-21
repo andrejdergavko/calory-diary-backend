@@ -2,10 +2,10 @@ import { Module, NestModule, MiddlewareConsumer } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { MealEntryModule } from './meal-entry/meal-entry.module';
+import { MealModule } from './meal/meal.module';
 import { AIModule } from './ai/ai.module';
 import { LoggerMiddleware } from './common/middleware/logger.middleware';
-import { MealEntryFoodModule } from './meal-entry-food/meal-entry-food.module';
+import { FoodEntryModule } from './food-entry/food-entry.module';
 
 @Module({
   imports: [
@@ -13,8 +13,8 @@ import { MealEntryFoodModule } from './meal-entry-food/meal-entry-food.module';
     ConfigModule.forRoot({
       isGlobal: true,
     }),
-    MealEntryModule,
-    MealEntryFoodModule,
+    MealModule,
+    FoodEntryModule,
     AIModule,
   ],
   controllers: [AppController],

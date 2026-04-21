@@ -1,7 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
-import type { MealEntryFood } from '../generated/prisma/client';
+import type { FoodEntry } from '../generated/prisma/client';
 import { PrismaService } from '../prisma.service';
-import { ProcessedMealEntryFood } from './ai.types';
+import { ProcessedFoodEntry } from './ai.types';
 import OpenAI from 'openai';
 import { PROCESS_MEAL_ENTRY_INSTRUCTION } from './instructions/process-meal-entry-instruction';
 import {
@@ -18,10 +18,10 @@ export class AIService {
     this.client = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
   }
 
-  async processMealEntry(
+  async processMeal(
     text: string,
-    todayFoods: MealEntryFood[],
-  ): Promise<ProcessedMealEntryFood[]> {
+    todayFoods: FoodEntry[],
+  ): Promise<ProcessedFoodEntry[]> {
     const todayFoodsContext =
       todayFoods.length > 0
         ? `Сегодня ранее съедено:\n${JSON.stringify(todayFoods, null, 2)}`
