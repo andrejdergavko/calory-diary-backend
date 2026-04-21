@@ -4,7 +4,7 @@ import { Injectable } from '@nestjs/common';
 export class AppService {
   getHealth() {
     return {
-      status: 'ok',
+      status: 'ok1',
       timestamp: new Date().toISOString(),
     };
   }
