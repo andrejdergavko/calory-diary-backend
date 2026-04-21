@@ -1,4 +1,8 @@
-import { Injectable, Logger } from '@nestjs/common';
+import {
+  Injectable,
+  Logger,
+  ServiceUnavailableException,
+} from '@nestjs/common';
 import OpenAI from 'openai';
 import { FoodEntry } from '../../generated/prisma/client';
 import { AIModelName, ProcessedFoodEntry } from '../ai.types';
@@ -17,7 +21,7 @@ export class DeepseekProvider implements AIModelProvider {
   constructor() {
     const deepseekKey = process.env.DEEPSEEK_API_KEY;
     if (!deepseekKey) {
-      throw new Error('DEEPSEEK_API_KEY is required to call Deepseek');
+      throw new ServiceUnavailableException('Deepseek API key is not set');
     }
 
     this.client = new OpenAI({

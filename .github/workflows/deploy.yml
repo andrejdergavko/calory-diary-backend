@@ -58,6 +58,9 @@ jobs:
 
             export DATABASE_URL="${{ secrets.DATABASE_URL }}"
             export OPENAI_API_KEY="${{ secrets.OPENAI_API_KEY }}"
+            export DEEPSEEK_API_KEY="${{ secrets.DEEPSEEK_API_KEY }}"
+            export JWT_SECRET="${{ secrets.JWT_SECRET }}"
+            export AI_PROVIDER="${{ vars.AI_PROVIDER }}"
             export PORT="${PORT}"
 
             docker-compose pull app
