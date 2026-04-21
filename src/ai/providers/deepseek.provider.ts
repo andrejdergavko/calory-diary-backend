@@ -19,9 +19,16 @@ export class DeepseekProvider implements AIModelProvider {
   private readonly client: OpenAI;
 
   constructor() {
+    console.log('DEEPSEEK_API_KEY', process.env.DEEPSEEK_API_KEY);
+    console.log('AI_PROVIDER', process.env.AI_PROVIDER);
+    console.log('JWT_SECRET', process.env.JWT_SECRET);
+    console.log('PORT', process.env.PORT);
+    console.log('DATABASE_URL', process.env.DATABASE_URL);
+    console.log('OPENAI_API_KEY', process.env.OPENAI_API_KEY);
+
     const deepseekKey = process.env.DEEPSEEK_API_KEY;
     if (!deepseekKey) {
-      throw new ServiceUnavailableException('Deepseek API key is not set');
+      this.logger.error('Deepseek API key is not set');
     }
 
     this.client = new OpenAI({
