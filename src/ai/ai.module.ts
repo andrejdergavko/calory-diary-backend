@@ -1,10 +1,10 @@
 import { Module } from '@nestjs/common';
 import { AIService } from './ai.service';
-import { PrismaService } from '../prisma.service';
+import { DeepseekProvider } from './providers/deepseek.provider';
+import { OpenAIProvider } from './providers/openai.provider';
 
 @Module({
-  controllers: [],
-  providers: [AIService, PrismaService],
+  providers: [AIService, DeepseekProvider, OpenAIProvider],
   exports: [AIService],
 })
 export class AIModule {}

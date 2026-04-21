@@ -1,56 +1,45 @@
 import { Injectable, Logger } from '@nestjs/common';
-import type { FoodEntry } from '../generated/prisma/client';
-import { PrismaService } from '../prisma.service';
+import { FoodEntry } from '../generated/prisma/client';
 import { ProcessedFoodEntry } from './ai.types';
-import OpenAI from 'openai';
-import { PROCESS_MEAL_ENTRY_INSTRUCTION } from './instructions/process-meal-entry-instruction';
-import {
-  PROCESS_MEAL_ENTRY_RESPONSE_SCHEMA,
-  PROCESS_MEAL_ENTRY_SCHEMA,
-} from './schemas/process-meal-entry-schema';
+import { ConfigService } from '@nestjs/config';
+import { AIModelProvider } from './providers/ai-model-provider';
+import { AIModelName } from './ai.types';
+import { DeepseekProvider } from './providers/deepseek.provider';
+import { OpenAIProvider } from './providers/openai.provider';
 
 @Injectable()
 export class AIService {
   private readonly logger = new Logger(AIService.name);
-  private readonly client: OpenAI;
+  private readonly provider: AIModelProvider;
 
-  constructor(private readonly prisma: PrismaService) {
-    this.client = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
+  constructor(
+    private readonly config: ConfigService,
+    private readonly deepseekProvider: DeepseekProvider,
+    private readonly openAIProvider: OpenAIProvider,
+  ) {
+    const configuredProvider =
+      (this.config.get<AIModelName>('AI_PROVIDER') ?? 'deepseek') || 'deepseek';
+
+    const providers: Record<AIModelName, AIModelProvider> = {
+      deepseek: deepseekProvider,
+      openai: openAIProvider,
+    };
+
+    this.provider = providers[configuredProvider] ?? deepseekProvider;
+
+    if (!providers[configuredProvider]) {
+      this.logger.warn(
+        `Не удалось найти провайдера ${configuredProvider}, используется Deepseek`,
+      );
+    } else if (this.provider.name !== configuredProvider) {
+      this.logger.log(`AI-provider switched to ${this.provider.name}`);
+    }
   }
 
   async processMeal(
     text: string,
     todayFoods: FoodEntry[],
   ): Promise<ProcessedFoodEntry[]> {
-    const todayFoodsContext =
-      todayFoods.length > 0
-        ? `Сегодня ранее съедено:\n${JSON.stringify(todayFoods, null, 2)}`
-        : 'Сегодня ранее ничего не съедено.';
-
-    const response = await this.client.responses.create({
-      model: 'gpt-5-mini',
-      instructions: PROCESS_MEAL_ENTRY_INSTRUCTION,
-      input: `Обработай запись: ${text}\n\n${todayFoodsContext}`,
-      text: {
-        format: {
-          type: 'json_schema',
-          name: 'processed_meal_entry_foods',
-          description:
-            'List of analyzed foods with quantities and macronutrients',
-          strict: true,
-          schema: PROCESS_MEAL_ENTRY_SCHEMA,
-        },
-      },
-    });
-
-    const result = PROCESS_MEAL_ENTRY_RESPONSE_SCHEMA.safeParse(
-      JSON.parse(response.output_text),
-    );
-
-    if (!result.success) {
-      throw new Error('Invalid response from AI model');
-    }
-
-    return result.data.foods;
+    return this.provider.processMeal(text, todayFoods);
   }
 }

@@ -3,11 +3,12 @@ import { MealService } from './meal.service';
 import { MealController } from './meal.controller';
 import { PrismaService } from '../prisma.service';
 import { FoodEntryService } from 'src/food-entry/food-entry.service';
-import { AIService } from 'src/ai/ai.service';
+import { AIModule } from 'src/ai/ai.module';
 
 @Module({
+  imports: [AIModule],
   controllers: [MealController],
-  providers: [MealService, PrismaService, FoodEntryService, AIService],
+  providers: [MealService, PrismaService, FoodEntryService],
   exports: [MealService],
 })
 export class MealModule {}

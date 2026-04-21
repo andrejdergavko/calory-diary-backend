@@ -6,3 +6,5 @@ export interface ProcessedFoodEntry {
   fat: number;
   carbs: number;
 }
+
+export type AIModelName = 'deepseek' | 'openai';
