@@ -1,9 +1,14 @@
-import { Body, Controller, Delete, Param, ParseIntPipe } from '@nestjs/common';
+import { Controller, Delete, Get, Param, ParseIntPipe } from '@nestjs/common';
 import { FoodEntryService } from './food-entry.service';
 
 @Controller('food-entry')
 export class FoodEntryController {
   constructor(private readonly foodEntryService: FoodEntryService) {}
+
+  @Get('today')
+  getFoodEntriesForToday() {
+    return this.foodEntryService.getFoodEntrysForToday();
+  }
 
   @Delete(':id')
   deleteFoodEntry(@Param('id', ParseIntPipe) id: number) {
