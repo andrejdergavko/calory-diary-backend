@@ -13,6 +13,9 @@ export class FoodEntryService {
     const { start, end } = getDayBounds(0);
 
     const foodEntrys = await this.prisma.foodEntry.findMany({
+      orderBy: {
+        createdAt: 'asc',
+      },
       where: {
         meal: {
           loggedAt: {
