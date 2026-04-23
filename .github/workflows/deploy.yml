@@ -55,6 +55,7 @@ jobs:
             # docker pull "${IMAGE}"
             docker stop "${CONTAINER}" || true
             docker rm "${CONTAINER}" || true
+            
 
             export DATABASE_URL="${{ secrets.DATABASE_URL }}"
             export OPENAI_API_KEY="${{ secrets.OPENAI_API_KEY }}"
@@ -65,3 +66,4 @@ jobs:
 
             docker-compose pull app
             docker-compose up -d --remove-orphans
+            docker image prune
