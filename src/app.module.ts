@@ -6,6 +6,7 @@ import { MealModule } from './meal/meal.module';
 import { AIModule } from './ai/ai.module';
 import { LoggerMiddleware } from './common/middleware/logger.middleware';
 import { FoodEntryModule } from './food-entry/food-entry.module';
+import { MacroTargetsModule } from './macro-targets/macro-targets.module';
 
 @Module({
   imports: [
@@ -16,6 +17,7 @@ import { FoodEntryModule } from './food-entry/food-entry.module';
     MealModule,
     FoodEntryModule,
     AIModule,
+    MacroTargetsModule,
   ],
   controllers: [AppController],
   providers: [AppService],

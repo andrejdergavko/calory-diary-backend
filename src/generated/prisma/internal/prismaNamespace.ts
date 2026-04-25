@@ -385,6 +385,7 @@ type FieldRefInputType<Model, FieldType> = Model extends never ? never : FieldRe
 
 export const ModelName = {
   User: 'User',
+  MacroTarget: 'MacroTarget',
   Meal: 'Meal',
   FoodEntry: 'FoodEntry'
 } as const
@@ -402,7 +403,7 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
     omit: GlobalOmitOptions
   }
   meta: {
-    modelProps: "user" | "meal" | "foodEntry"
+    modelProps: "user" | "macroTarget" | "meal" | "foodEntry"
     txIsolationLevel: TransactionIsolationLevel
   }
   model: {
@@ -477,6 +478,80 @@ export type TypeMap<ExtArgs extends runtime.Types.Extensions.InternalArgs = runt
         count: {
           args: Prisma.UserCountArgs<ExtArgs>
           result: runtime.Types.Utils.Optional<Prisma.UserCountAggregateOutputType> | number
+        }
+      }
+    }
+    MacroTarget: {
+      payload: Prisma.$MacroTargetPayload<ExtArgs>
+      fields: Prisma.MacroTargetFieldRefs
+      operations: {
+        findUnique: {
+          args: Prisma.MacroTargetFindUniqueArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MacroTargetPayload> | null
+        }
+        findUniqueOrThrow: {
+          args: Prisma.MacroTargetFindUniqueOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MacroTargetPayload>
+        }
+        findFirst: {
+          args: Prisma.MacroTargetFindFirstArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MacroTargetPayload> | null
+        }
+        findFirstOrThrow: {
+          args: Prisma.MacroTargetFindFirstOrThrowArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MacroTargetPayload>
+        }
+        findMany: {
+          args: Prisma.MacroTargetFindManyArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MacroTargetPayload>[]
+        }
+        create: {
+          args: Prisma.MacroTargetCreateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MacroTargetPayload>
+        }
+        createMany: {
+          args: Prisma.MacroTargetCreateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        createManyAndReturn: {
+          args: Prisma.MacroTargetCreateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MacroTargetPayload>[]
+        }
+        delete: {
+          args: Prisma.MacroTargetDeleteArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MacroTargetPayload>
+        }
+        update: {
+          args: Prisma.MacroTargetUpdateArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MacroTargetPayload>
+        }
+        deleteMany: {
+          args: Prisma.MacroTargetDeleteManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateMany: {
+          args: Prisma.MacroTargetUpdateManyArgs<ExtArgs>
+          result: BatchPayload
+        }
+        updateManyAndReturn: {
+          args: Prisma.MacroTargetUpdateManyAndReturnArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MacroTargetPayload>[]
+        }
+        upsert: {
+          args: Prisma.MacroTargetUpsertArgs<ExtArgs>
+          result: runtime.Types.Utils.PayloadToResult<Prisma.$MacroTargetPayload>
+        }
+        aggregate: {
+          args: Prisma.MacroTargetAggregateArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.AggregateMacroTarget>
+        }
+        groupBy: {
+          args: Prisma.MacroTargetGroupByArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.MacroTargetGroupByOutputType>[]
+        }
+        count: {
+          args: Prisma.MacroTargetCountArgs<ExtArgs>
+          result: runtime.Types.Utils.Optional<Prisma.MacroTargetCountAggregateOutputType> | number
         }
       }
     }
@@ -673,12 +748,25 @@ export const UserScalarFieldEnum = {
   name: 'name',
   hashedPassword: 'hashedPassword',
   role: 'role',
-  dailyCalorieTarget: 'dailyCalorieTarget',
   createdAt: 'createdAt',
   updatedAt: 'updatedAt'
 } as const
 
 export type UserScalarFieldEnum = (typeof UserScalarFieldEnum)[keyof typeof UserScalarFieldEnum]
+
+
+export const MacroTargetScalarFieldEnum = {
+  id: 'id',
+  userId: 'userId',
+  calories: 'calories',
+  protein: 'protein',
+  fat: 'fat',
+  carbs: 'carbs',
+  createdAt: 'createdAt',
+  updatedAt: 'updatedAt'
+} as const
+
+export type MacroTargetScalarFieldEnum = (typeof MacroTargetScalarFieldEnum)[keyof typeof MacroTargetScalarFieldEnum]
 
 
 export const MealScalarFieldEnum = {
@@ -917,6 +1005,7 @@ export type PrismaClientOptions = ({
 }
 export type GlobalOmitConfig = {
   user?: Prisma.UserOmit
+  macroTarget?: Prisma.MacroTargetOmit
   meal?: Prisma.MealOmit
   foodEntry?: Prisma.FoodEntryOmit
 }

@@ -9,6 +9,7 @@
  * 🟢 You can import this file directly.
  */
 export type * from './models/User.js'
+export type * from './models/MacroTarget.js'
 export type * from './models/Meal.js'
 export type * from './models/FoodEntry.js'
 export type * from './commonInputTypes.js'

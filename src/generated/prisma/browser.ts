@@ -23,6 +23,11 @@ export * from './enums.js';
  */
 export type User = Prisma.UserModel
 /**
+ * Model MacroTarget
+ * 
+ */
+export type MacroTarget = Prisma.MacroTargetModel
+/**
  * Model Meal
  * 
  */

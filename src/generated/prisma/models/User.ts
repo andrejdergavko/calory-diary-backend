@@ -28,12 +28,10 @@ export type AggregateUser = {
 
 export type UserAvgAggregateOutputType = {
   id: number | null
-  dailyCalorieTarget: number | null
 }
 
 export type UserSumAggregateOutputType = {
   id: number | null
-  dailyCalorieTarget: number | null
 }
 
 export type UserMinAggregateOutputType = {
@@ -42,7 +40,6 @@ export type UserMinAggregateOutputType = {
   name: string | null
   hashedPassword: string | null
   role: $Enums.Role | null
-  dailyCalorieTarget: number | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -53,7 +50,6 @@ export type UserMaxAggregateOutputType = {
   name: string | null
   hashedPassword: string | null
   role: $Enums.Role | null
-  dailyCalorieTarget: number | null
   createdAt: Date | null
   updatedAt: Date | null
 }
@@ -64,7 +60,6 @@ export type UserCountAggregateOutputType = {
   name: number
   hashedPassword: number
   role: number
-  dailyCalorieTarget: number
   createdAt: number
   updatedAt: number
   _all: number
@@ -73,12 +68,10 @@ export type UserCountAggregateOutputType = {
 
 export type UserAvgAggregateInputType = {
   id?: true
-  dailyCalorieTarget?: true
 }
 
 export type UserSumAggregateInputType = {
   id?: true
-  dailyCalorieTarget?: true
 }
 
 export type UserMinAggregateInputType = {
@@ -87,7 +80,6 @@ export type UserMinAggregateInputType = {
   name?: true
   hashedPassword?: true
   role?: true
-  dailyCalorieTarget?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -98,7 +90,6 @@ export type UserMaxAggregateInputType = {
   name?: true
   hashedPassword?: true
   role?: true
-  dailyCalorieTarget?: true
   createdAt?: true
   updatedAt?: true
 }
@@ -109,7 +100,6 @@ export type UserCountAggregateInputType = {
   name?: true
   hashedPassword?: true
   role?: true
-  dailyCalorieTarget?: true
   createdAt?: true
   updatedAt?: true
   _all?: true
@@ -207,7 +197,6 @@ export type UserGroupByOutputType = {
   name: string
   hashedPassword: string
   role: $Enums.Role
-  dailyCalorieTarget: number | null
   createdAt: Date
   updatedAt: Date
   _count: UserCountAggregateOutputType | null
@@ -241,9 +230,9 @@ export type UserWhereInput = {
   name?: Prisma.StringFilter<"User"> | string
   hashedPassword?: Prisma.StringFilter<"User"> | string
   role?: Prisma.EnumRoleFilter<"User"> | $Enums.Role
-  dailyCalorieTarget?: Prisma.IntNullableFilter<"User"> | number | null
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"User"> | Date | string
+  macroTarget?: Prisma.XOR<Prisma.MacroTargetNullableScalarRelationFilter, Prisma.MacroTargetWhereInput> | null
   mealEntries?: Prisma.MealListRelationFilter
 }
 
@@ -253,9 +242,9 @@ export type UserOrderByWithRelationInput = {
   name?: Prisma.SortOrder
   hashedPassword?: Prisma.SortOrder
   role?: Prisma.SortOrder
-  dailyCalorieTarget?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
+  macroTarget?: Prisma.MacroTargetOrderByWithRelationInput
   mealEntries?: Prisma.MealOrderByRelationAggregateInput
 }
 
@@ -268,9 +257,9 @@ export type UserWhereUniqueInput = Prisma.AtLeast<{
   name?: Prisma.StringFilter<"User"> | string
   hashedPassword?: Prisma.StringFilter<"User"> | string
   role?: Prisma.EnumRoleFilter<"User"> | $Enums.Role
-  dailyCalorieTarget?: Prisma.IntNullableFilter<"User"> | number | null
   createdAt?: Prisma.DateTimeFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeFilter<"User"> | Date | string
+  macroTarget?: Prisma.XOR<Prisma.MacroTargetNullableScalarRelationFilter, Prisma.MacroTargetWhereInput> | null
   mealEntries?: Prisma.MealListRelationFilter
 }, "id" | "email">
 
@@ -280,7 +269,6 @@ export type UserOrderByWithAggregationInput = {
   name?: Prisma.SortOrder
   hashedPassword?: Prisma.SortOrder
   role?: Prisma.SortOrder
-  dailyCalorieTarget?: Prisma.SortOrderInput | Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
   _count?: Prisma.UserCountOrderByAggregateInput
@@ -299,7 +287,6 @@ export type UserScalarWhereWithAggregatesInput = {
   name?: Prisma.StringWithAggregatesFilter<"User"> | string
   hashedPassword?: Prisma.StringWithAggregatesFilter<"User"> | string
   role?: Prisma.EnumRoleWithAggregatesFilter<"User"> | $Enums.Role
-  dailyCalorieTarget?: Prisma.IntNullableWithAggregatesFilter<"User"> | number | null
   createdAt?: Prisma.DateTimeWithAggregatesFilter<"User"> | Date | string
   updatedAt?: Prisma.DateTimeWithAggregatesFilter<"User"> | Date | string
 }
@@ -309,9 +296,9 @@ export type UserCreateInput = {
   name: string
   hashedPassword: string
   role?: $Enums.Role
-  dailyCalorieTarget?: number | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  macroTarget?: Prisma.MacroTargetCreateNestedOneWithoutUserInput
   mealEntries?: Prisma.MealCreateNestedManyWithoutUserInput
 }
 
@@ -321,9 +308,9 @@ export type UserUncheckedCreateInput = {
   name: string
   hashedPassword: string
   role?: $Enums.Role
-  dailyCalorieTarget?: number | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  macroTarget?: Prisma.MacroTargetUncheckedCreateNestedOneWithoutUserInput
   mealEntries?: Prisma.MealUncheckedCreateNestedManyWithoutUserInput
 }
 
@@ -332,9 +319,9 @@ export type UserUpdateInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   hashedPassword?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
-  dailyCalorieTarget?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  macroTarget?: Prisma.MacroTargetUpdateOneWithoutUserNestedInput
   mealEntries?: Prisma.MealUpdateManyWithoutUserNestedInput
 }
 
@@ -344,9 +331,9 @@ export type UserUncheckedUpdateInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   hashedPassword?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
-  dailyCalorieTarget?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  macroTarget?: Prisma.MacroTargetUncheckedUpdateOneWithoutUserNestedInput
   mealEntries?: Prisma.MealUncheckedUpdateManyWithoutUserNestedInput
 }
 
@@ -356,7 +343,6 @@ export type UserCreateManyInput = {
   name: string
   hashedPassword: string
   role?: $Enums.Role
-  dailyCalorieTarget?: number | null
   createdAt?: Date | string
   updatedAt?: Date | string
 }
@@ -366,7 +352,6 @@ export type UserUpdateManyMutationInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   hashedPassword?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
-  dailyCalorieTarget?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -377,7 +362,6 @@ export type UserUncheckedUpdateManyInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   hashedPassword?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
-  dailyCalorieTarget?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
 }
@@ -388,14 +372,12 @@ export type UserCountOrderByAggregateInput = {
   name?: Prisma.SortOrder
   hashedPassword?: Prisma.SortOrder
   role?: Prisma.SortOrder
-  dailyCalorieTarget?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
 
 export type UserAvgOrderByAggregateInput = {
   id?: Prisma.SortOrder
-  dailyCalorieTarget?: Prisma.SortOrder
 }
 
 export type UserMaxOrderByAggregateInput = {
@@ -404,7 +386,6 @@ export type UserMaxOrderByAggregateInput = {
   name?: Prisma.SortOrder
   hashedPassword?: Prisma.SortOrder
   role?: Prisma.SortOrder
-  dailyCalorieTarget?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
@@ -415,14 +396,12 @@ export type UserMinOrderByAggregateInput = {
   name?: Prisma.SortOrder
   hashedPassword?: Prisma.SortOrder
   role?: Prisma.SortOrder
-  dailyCalorieTarget?: Prisma.SortOrder
   createdAt?: Prisma.SortOrder
   updatedAt?: Prisma.SortOrder
 }
 
 export type UserSumOrderByAggregateInput = {
   id?: Prisma.SortOrder
-  dailyCalorieTarget?: Prisma.SortOrder
 }
 
 export type UserScalarRelationFilter = {
@@ -438,14 +417,6 @@ export type EnumRoleFieldUpdateOperationsInput = {
   set?: $Enums.Role
 }
 
-export type NullableIntFieldUpdateOperationsInput = {
-  set?: number | null
-  increment?: number
-  decrement?: number
-  multiply?: number
-  divide?: number
-}
-
 export type DateTimeFieldUpdateOperationsInput = {
   set?: Date | string
 }
@@ -456,6 +427,20 @@ export type IntFieldUpdateOperationsInput = {
   decrement?: number
   multiply?: number
   divide?: number
+}
+
+export type UserCreateNestedOneWithoutMacroTargetInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutMacroTargetInput, Prisma.UserUncheckedCreateWithoutMacroTargetInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutMacroTargetInput
+  connect?: Prisma.UserWhereUniqueInput
+}
+
+export type UserUpdateOneRequiredWithoutMacroTargetNestedInput = {
+  create?: Prisma.XOR<Prisma.UserCreateWithoutMacroTargetInput, Prisma.UserUncheckedCreateWithoutMacroTargetInput>
+  connectOrCreate?: Prisma.UserCreateOrConnectWithoutMacroTargetInput
+  upsert?: Prisma.UserUpsertWithoutMacroTargetInput
+  connect?: Prisma.UserWhereUniqueInput
+  update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutMacroTargetInput, Prisma.UserUpdateWithoutMacroTargetInput>, Prisma.UserUncheckedUpdateWithoutMacroTargetInput>
 }
 
 export type UserCreateNestedOneWithoutMealEntriesInput = {
@@ -472,14 +457,72 @@ export type UserUpdateOneRequiredWithoutMealEntriesNestedInput = {
   update?: Prisma.XOR<Prisma.XOR<Prisma.UserUpdateToOneWithWhereWithoutMealEntriesInput, Prisma.UserUpdateWithoutMealEntriesInput>, Prisma.UserUncheckedUpdateWithoutMealEntriesInput>
 }
 
+export type UserCreateWithoutMacroTargetInput = {
+  email: string
+  name: string
+  hashedPassword: string
+  role?: $Enums.Role
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  mealEntries?: Prisma.MealCreateNestedManyWithoutUserInput
+}
+
+export type UserUncheckedCreateWithoutMacroTargetInput = {
+  id?: number
+  email: string
+  name: string
+  hashedPassword: string
+  role?: $Enums.Role
+  createdAt?: Date | string
+  updatedAt?: Date | string
+  mealEntries?: Prisma.MealUncheckedCreateNestedManyWithoutUserInput
+}
+
+export type UserCreateOrConnectWithoutMacroTargetInput = {
+  where: Prisma.UserWhereUniqueInput
+  create: Prisma.XOR<Prisma.UserCreateWithoutMacroTargetInput, Prisma.UserUncheckedCreateWithoutMacroTargetInput>
+}
+
+export type UserUpsertWithoutMacroTargetInput = {
+  update: Prisma.XOR<Prisma.UserUpdateWithoutMacroTargetInput, Prisma.UserUncheckedUpdateWithoutMacroTargetInput>
+  create: Prisma.XOR<Prisma.UserCreateWithoutMacroTargetInput, Prisma.UserUncheckedCreateWithoutMacroTargetInput>
+  where?: Prisma.UserWhereInput
+}
+
+export type UserUpdateToOneWithWhereWithoutMacroTargetInput = {
+  where?: Prisma.UserWhereInput
+  data: Prisma.XOR<Prisma.UserUpdateWithoutMacroTargetInput, Prisma.UserUncheckedUpdateWithoutMacroTargetInput>
+}
+
+export type UserUpdateWithoutMacroTargetInput = {
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  hashedPassword?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  mealEntries?: Prisma.MealUpdateManyWithoutUserNestedInput
+}
+
+export type UserUncheckedUpdateWithoutMacroTargetInput = {
+  id?: Prisma.IntFieldUpdateOperationsInput | number
+  email?: Prisma.StringFieldUpdateOperationsInput | string
+  name?: Prisma.StringFieldUpdateOperationsInput | string
+  hashedPassword?: Prisma.StringFieldUpdateOperationsInput | string
+  role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
+  createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  mealEntries?: Prisma.MealUncheckedUpdateManyWithoutUserNestedInput
+}
+
 export type UserCreateWithoutMealEntriesInput = {
   email: string
   name: string
   hashedPassword: string
   role?: $Enums.Role
-  dailyCalorieTarget?: number | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  macroTarget?: Prisma.MacroTargetCreateNestedOneWithoutUserInput
 }
 
 export type UserUncheckedCreateWithoutMealEntriesInput = {
@@ -488,9 +531,9 @@ export type UserUncheckedCreateWithoutMealEntriesInput = {
   name: string
   hashedPassword: string
   role?: $Enums.Role
-  dailyCalorieTarget?: number | null
   createdAt?: Date | string
   updatedAt?: Date | string
+  macroTarget?: Prisma.MacroTargetUncheckedCreateNestedOneWithoutUserInput
 }
 
 export type UserCreateOrConnectWithoutMealEntriesInput = {
@@ -514,9 +557,9 @@ export type UserUpdateWithoutMealEntriesInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   hashedPassword?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
-  dailyCalorieTarget?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  macroTarget?: Prisma.MacroTargetUpdateOneWithoutUserNestedInput
 }
 
 export type UserUncheckedUpdateWithoutMealEntriesInput = {
@@ -525,9 +568,9 @@ export type UserUncheckedUpdateWithoutMealEntriesInput = {
   name?: Prisma.StringFieldUpdateOperationsInput | string
   hashedPassword?: Prisma.StringFieldUpdateOperationsInput | string
   role?: Prisma.EnumRoleFieldUpdateOperationsInput | $Enums.Role
-  dailyCalorieTarget?: Prisma.NullableIntFieldUpdateOperationsInput | number | null
   createdAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
   updatedAt?: Prisma.DateTimeFieldUpdateOperationsInput | Date | string
+  macroTarget?: Prisma.MacroTargetUncheckedUpdateOneWithoutUserNestedInput
 }
 
 
@@ -567,9 +610,9 @@ export type UserSelect<ExtArgs extends runtime.Types.Extensions.InternalArgs = r
   name?: boolean
   hashedPassword?: boolean
   role?: boolean
-  dailyCalorieTarget?: boolean
   createdAt?: boolean
   updatedAt?: boolean
+  macroTarget?: boolean | Prisma.User$macroTargetArgs<ExtArgs>
   mealEntries?: boolean | Prisma.User$mealEntriesArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }, ExtArgs["result"]["user"]>
@@ -580,7 +623,6 @@ export type UserSelectCreateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   name?: boolean
   hashedPassword?: boolean
   role?: boolean
-  dailyCalorieTarget?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }, ExtArgs["result"]["user"]>
@@ -591,7 +633,6 @@ export type UserSelectUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensio
   name?: boolean
   hashedPassword?: boolean
   role?: boolean
-  dailyCalorieTarget?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }, ExtArgs["result"]["user"]>
@@ -602,13 +643,13 @@ export type UserSelectScalar = {
   name?: boolean
   hashedPassword?: boolean
   role?: boolean
-  dailyCalorieTarget?: boolean
   createdAt?: boolean
   updatedAt?: boolean
 }
 
-export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "email" | "name" | "hashedPassword" | "role" | "dailyCalorieTarget" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
+export type UserOmit<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = runtime.Types.Extensions.GetOmit<"id" | "email" | "name" | "hashedPassword" | "role" | "createdAt" | "updatedAt", ExtArgs["result"]["user"]>
 export type UserInclude<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  macroTarget?: boolean | Prisma.User$macroTargetArgs<ExtArgs>
   mealEntries?: boolean | Prisma.User$mealEntriesArgs<ExtArgs>
   _count?: boolean | Prisma.UserCountOutputTypeDefaultArgs<ExtArgs>
 }
@@ -618,6 +659,7 @@ export type UserIncludeUpdateManyAndReturn<ExtArgs extends runtime.Types.Extensi
 export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
   name: "User"
   objects: {
+    macroTarget: Prisma.$MacroTargetPayload<ExtArgs> | null
     mealEntries: Prisma.$MealPayload<ExtArgs>[]
   }
   scalars: runtime.Types.Extensions.GetPayloadResult<{
@@ -626,7 +668,6 @@ export type $UserPayload<ExtArgs extends runtime.Types.Extensions.InternalArgs =
     name: string
     hashedPassword: string
     role: $Enums.Role
-    dailyCalorieTarget: number | null
     createdAt: Date
     updatedAt: Date
   }, ExtArgs["result"]["user"]>
@@ -1023,6 +1064,7 @@ readonly fields: UserFieldRefs;
  */
 export interface Prisma__UserClient<T, Null = never, ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs, GlobalOmitOptions = {}> extends Prisma.PrismaPromise<T> {
   readonly [Symbol.toStringTag]: "PrismaPromise"
+  macroTarget<T extends Prisma.User$macroTargetArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$macroTargetArgs<ExtArgs>>): Prisma.Prisma__MacroTargetClient<runtime.Types.Result.GetResult<Prisma.$MacroTargetPayload<ExtArgs>, T, "findUniqueOrThrow", GlobalOmitOptions> | null, null, ExtArgs, GlobalOmitOptions>
   mealEntries<T extends Prisma.User$mealEntriesArgs<ExtArgs> = {}>(args?: Prisma.Subset<T, Prisma.User$mealEntriesArgs<ExtArgs>>): Prisma.PrismaPromise<runtime.Types.Result.GetResult<Prisma.$MealPayload<ExtArgs>, T, "findMany", GlobalOmitOptions> | Null>
   /**
    * Attaches callbacks for the resolution and/or rejection of the Promise.
@@ -1058,7 +1100,6 @@ export interface UserFieldRefs {
   readonly name: Prisma.FieldRef<"User", 'String'>
   readonly hashedPassword: Prisma.FieldRef<"User", 'String'>
   readonly role: Prisma.FieldRef<"User", 'Role'>
-  readonly dailyCalorieTarget: Prisma.FieldRef<"User", 'Int'>
   readonly createdAt: Prisma.FieldRef<"User", 'DateTime'>
   readonly updatedAt: Prisma.FieldRef<"User", 'DateTime'>
 }
@@ -1446,6 +1487,25 @@ export type UserDeleteManyArgs<ExtArgs extends runtime.Types.Extensions.Internal
    * Limit how many Users to delete.
    */
   limit?: number
+}
+
+/**
+ * User.macroTarget
+ */
+export type User$macroTargetArgs<ExtArgs extends runtime.Types.Extensions.InternalArgs = runtime.Types.Extensions.DefaultArgs> = {
+  /**
+   * Select specific fields to fetch from the MacroTarget
+   */
+  select?: Prisma.MacroTargetSelect<ExtArgs> | null
+  /**
+   * Omit specific fields from the MacroTarget
+   */
+  omit?: Prisma.MacroTargetOmit<ExtArgs> | null
+  /**
+   * Choose, which related nodes to fetch as well
+   */
+  include?: Prisma.MacroTargetInclude<ExtArgs> | null
+  where?: Prisma.MacroTargetWhereInput
 }
 
 /**
