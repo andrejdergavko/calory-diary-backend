@@ -29,6 +29,15 @@ export class FoodEntryService {
     return foodEntrys;
   }
 
+  async editFoodEntry(id: number, payload: FoodEntry): Promise<FoodEntry> {
+    const updatedFoodEntry = await this.prisma.foodEntry.update({
+      where: { id },
+      data: payload,
+    });
+
+    return updatedFoodEntry;
+  }
+
   async deleteFoodEntry(id: number) {
     await this.prisma.foodEntry.delete({
       where: { id },

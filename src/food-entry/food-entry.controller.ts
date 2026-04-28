@@ -1,5 +1,14 @@
-import { Controller, Delete, Get, Param, ParseIntPipe } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Delete,
+  Get,
+  Param,
+  ParseIntPipe,
+  Put,
+} from '@nestjs/common';
 import { FoodEntryService } from './food-entry.service';
+import type { FoodEntry } from 'src/generated/prisma/client';
 
 @Controller('food-entry')
 export class FoodEntryController {
@@ -8,6 +17,14 @@ export class FoodEntryController {
   @Get('today')
   getFoodEntriesForToday() {
     return this.foodEntryService.getFoodEntrysForToday();
+  }
+
+  @Put(':id')
+  editFoodEntry(
+    @Param('id', ParseIntPipe) id: number,
+    @Body() payload: FoodEntry,
+  ): Promise<FoodEntry> {
+    return this.foodEntryService.editFoodEntry(id, payload);
   }
 
   @Delete(':id')
