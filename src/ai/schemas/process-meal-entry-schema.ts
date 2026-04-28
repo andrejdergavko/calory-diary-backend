@@ -13,9 +13,9 @@ export const PROCESS_MEAL_ENTRY_SCHEMA = {
             type: 'string',
             description: 'Name of the food',
           },
-          quantity: {
+          weight: {
             type: 'number',
-            description: 'Quantity of the food in grams',
+            description: 'Weight of the food in grams',
           },
           calories: {
             type: 'number',
@@ -34,7 +34,7 @@ export const PROCESS_MEAL_ENTRY_SCHEMA = {
             description: 'Sum of carb values in grams',
           },
         },
-        required: ['name', 'quantity', 'calories', 'protein', 'fat', 'carbs'],
+        required: ['name', 'weight', 'calories', 'protein', 'fat', 'carbs'],
         additionalProperties: false,
       },
     },
@@ -47,7 +47,7 @@ export const PROCESS_MEAL_ENTRY_RESPONSE_SCHEMA = z.object({
   foods: z.array(
     z.object({
       name: z.string(),
-      quantity: z.number(),
+      weight: z.number(),
       calories: z.number(),
       protein: z.number(),
       fat: z.number(),

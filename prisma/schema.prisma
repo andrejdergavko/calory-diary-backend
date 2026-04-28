@@ -67,7 +67,7 @@ model FoodEntry {
   mealId Int
   meal   Meal  @relation(fields: [mealId], references: [id])
   name        String
-  quantity    Float
+  weight      Float
   calories    Int
   protein     Int
   fat         Int

@@ -43,7 +43,7 @@ export class MealService {
         foods: {
           create: aiResponse.map((food) => ({
             name: food.name,
-            quantity: food.quantity,
+            weight: food.weight,
             calories: food.calories,
             protein: food.protein,
             fat: food.fat,

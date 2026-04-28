@@ -1,6 +1,6 @@
 export interface ProcessedFoodEntry {
   name: string;
-  quantity: number;
+  weight: number;
   calories: number;
   protein: number;
   fat: number;
