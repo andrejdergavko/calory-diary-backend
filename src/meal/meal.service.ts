@@ -4,7 +4,6 @@ import { PrismaService } from '../prisma.service';
 import { ProcessMealDto } from './dto/process-meal.dto';
 import { FoodEntryService } from 'src/food-entry/food-entry.service';
 import { AIService } from 'src/ai/ai.service';
-import { calculateCalories } from './meal.utils';
 
 @Injectable()
 export class MealService {
@@ -42,13 +41,12 @@ export class MealService {
         loggedAt: new Date(),
         mealType: MealType.BREAKFAST,
         foods: {
-          create: aiResponse.map((food) => ({
-            name: food.name,
-            weight: food.weight,
-            calories: calculateCalories(food.protein, food.fat, food.carbs),
-            protein: food.protein,
-            fat: food.fat,
-            carbs: food.carbs,
+          create: aiResponse.map((processedFoodEntry) => ({
+            name: processedFoodEntry.food.name,
+            weight: processedFoodEntry.weight,
+            proteinPer100g: processedFoodEntry.food.proteinPer100g,
+            fatPer100g: processedFoodEntry.food.fatPer100g,
+            carbsPer100g: processedFoodEntry.food.carbsPer100g,
           })),
         },
       },

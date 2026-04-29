@@ -1,5 +1,6 @@
 import { FoodEntry } from '../../generated/prisma/client';
-import { AIModelName, ProcessedFoodEntry } from '../ai.types';
+import { AIModelName } from '../ai.types';
+import { AIProcessedFoodEntry } from './providers.types';
 
 export interface AIModelProvider {
   readonly name: AIModelName;
@@ -7,5 +8,5 @@ export interface AIModelProvider {
   processMeal(
     text: string,
     todayFoods: FoodEntry[],
-  ): Promise<ProcessedFoodEntry[]>;
+  ): Promise<AIProcessedFoodEntry[]>;
 }

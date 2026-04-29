@@ -1,11 +1,11 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { FoodEntry } from '../generated/prisma/client';
-import { ProcessedFoodEntry } from './ai.types';
 import { ConfigService } from '@nestjs/config';
 import { AIModelProvider } from './providers/ai-model-provider';
-import { AIModelName } from './ai.types';
+import { AIModelName, ProcessedFoodEntry } from './ai.types';
 import { DeepseekProvider } from './providers/deepseek.provider';
 import { OpenAIProvider } from './providers/openai.provider';
+import { AIProcessedFoodEntry } from './providers/providers.types';
 
 @Injectable()
 export class AIService {
@@ -40,6 +40,15 @@ export class AIService {
     text: string,
     todayFoods: FoodEntry[],
   ): Promise<ProcessedFoodEntry[]> {
-    return this.provider.processMeal(text, todayFoods);
+    const aiFoodEntries = await this.provider.processMeal(text, todayFoods);
+
+    const foodEntries = aiFoodEntries.map(
+      (aiProcessedFoodEntry: AIProcessedFoodEntry) => ({
+        food: aiProcessedFoodEntry.food,
+        weight: aiProcessedFoodEntry.weightInGrams,
+      }),
+    );
+
+    return foodEntries;
   }
 }

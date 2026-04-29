@@ -44,14 +44,15 @@ export const PROCESS_MEAL_ENTRY_SCHEMA = {
 };
 
 export const PROCESS_MEAL_ENTRY_RESPONSE_SCHEMA = z.object({
-  foods: z.array(
+  foodEntries: z.array(
     z.object({
-      name: z.string(),
-      weight: z.number(),
-      calories: z.number(),
-      protein: z.number(),
-      fat: z.number(),
-      carbs: z.number(),
+      food: z.object({
+        name: z.string(),
+        proteinPer100g: z.number(),
+        fatPer100g: z.number(),
+        carbsPer100g: z.number(),
+      }),
+      weightInGrams: z.number(),
     }),
   ),
 });

@@ -786,10 +786,9 @@ export const FoodEntryScalarFieldEnum = {
   mealId: 'mealId',
   name: 'name',
   weight: 'weight',
-  calories: 'calories',
-  protein: 'protein',
-  fat: 'fat',
-  carbs: 'carbs',
+  proteinPer100g: 'proteinPer100g',
+  fatPer100g: 'fatPer100g',
+  carbsPer100g: 'carbsPer100g',
   createdAt: 'createdAt'
 } as const
 

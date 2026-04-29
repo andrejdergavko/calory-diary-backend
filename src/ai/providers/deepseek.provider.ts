@@ -1,11 +1,12 @@
 import { Injectable, Logger } from '@nestjs/common';
 import OpenAI from 'openai';
 import { FoodEntry } from '../../generated/prisma/client';
-import { AIModelName, ProcessedFoodEntry } from '../ai.types';
+import { AIModelName } from '../ai.types';
 import { PROCESS_MEAL_ENTRY_INSTRUCTION } from '../instructions/process-meal-entry-instruction';
 import { buildTodayFoodsContext } from './provider.utils';
 import { AIModelProvider } from './ai-model-provider';
 import { PROCESS_MEAL_ENTRY_RESPONSE_SCHEMA } from '../schemas/process-meal-entry-schema';
+import { AIProcessedFoodEntry } from './providers.types';
 
 @Injectable()
 export class DeepseekProvider implements AIModelProvider {
@@ -29,7 +30,7 @@ export class DeepseekProvider implements AIModelProvider {
   async processMeal(
     text: string,
     todayFoods: FoodEntry[],
-  ): Promise<ProcessedFoodEntry[]> {
+  ): Promise<AIProcessedFoodEntry[]> {
     const completion = await this.client.chat.completions.create({
       messages: [
         {
@@ -55,6 +56,6 @@ export class DeepseekProvider implements AIModelProvider {
       throw new Error('Invalid response from Deepseek');
     }
 
-    return result.data.foods;
+    return result.data.foodEntries;
   }
 }

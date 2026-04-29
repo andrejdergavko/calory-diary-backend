@@ -1,7 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import OpenAI from 'openai';
 import { FoodEntry } from '../../generated/prisma/client';
-import { AIModelName, ProcessedFoodEntry } from '../ai.types';
+import { AIModelName } from '../ai.types';
 import { buildTodayFoodsContext } from './provider.utils';
 import { PROCESS_MEAL_ENTRY_INSTRUCTION } from '../instructions/process-meal-entry-instruction';
 
@@ -10,6 +10,7 @@ import {
   PROCESS_MEAL_ENTRY_RESPONSE_SCHEMA,
   PROCESS_MEAL_ENTRY_SCHEMA,
 } from '../schemas/process-meal-entry-schema';
+import { AIProcessedFoodEntry } from './providers.types';
 
 @Injectable()
 export class OpenAIProvider implements AIModelProvider {
@@ -27,7 +28,7 @@ export class OpenAIProvider implements AIModelProvider {
   async processMeal(
     text: string,
     todayFoods: FoodEntry[],
-  ): Promise<ProcessedFoodEntry[]> {
+  ): Promise<AIProcessedFoodEntry[]> {
     const response = await this.client.responses.create({
       model: 'gpt-5.1-mini',
       instructions: PROCESS_MEAL_ENTRY_INSTRUCTION,
@@ -54,6 +55,6 @@ export class OpenAIProvider implements AIModelProvider {
       throw new Error('Invalid response from OpenAI');
     }
 
-    return result.data.foods;
+    return result.data.foodEntries;
   }
 }
