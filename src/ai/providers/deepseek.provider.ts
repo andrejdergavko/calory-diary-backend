@@ -8,6 +8,8 @@ import { AIModelProvider } from './ai-model-provider';
 import { PROCESS_MEAL_ENTRY_RESPONSE_SCHEMA } from '../schemas/process-meal-entry-schema';
 import { AIProcessedFoodEntry } from './providers.types';
 
+const DEEPSEEK_MODEL = 'deepseek-v4-flash';
+
 @Injectable()
 export class DeepseekProvider implements AIModelProvider {
   readonly name: AIModelName = 'deepseek';
@@ -42,7 +44,7 @@ export class DeepseekProvider implements AIModelProvider {
           content: `Обработай запись: ${text}\n\n${buildTodayFoodsContext(todayFoods)}`,
         },
       ],
-      model: 'deepseek-chat',
+      model: DEEPSEEK_MODEL,
       response_format: { type: 'json_object' },
     });
 
