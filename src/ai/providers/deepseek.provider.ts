@@ -46,6 +46,8 @@ export class DeepseekProvider implements AIModelProvider {
       ],
       model: DEEPSEEK_MODEL,
       response_format: { type: 'json_object' },
+      reasoning_effort: 'high',
+      stream: false,
     });
 
     const rawContent = completion.choices[0].message.content ?? '';
