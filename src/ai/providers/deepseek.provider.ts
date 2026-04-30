@@ -8,7 +8,7 @@ import { AIModelProvider } from './ai-model-provider';
 import { PROCESS_MEAL_ENTRY_RESPONSE_SCHEMA } from '../schemas/process-meal-entry-schema';
 import { AIProcessedFoodEntry } from './providers.types';
 
-const DEEPSEEK_MODEL = 'deepseek-v4-flash';
+const DEEPSEEK_MODEL = 'deepseek-v4-pro';
 
 @Injectable()
 export class DeepseekProvider implements AIModelProvider {
@@ -33,6 +33,7 @@ export class DeepseekProvider implements AIModelProvider {
     text: string,
     todayFoods: FoodEntry[],
   ): Promise<AIProcessedFoodEntry[]> {
+    // @ts-ignore
     const completion = await this.client.chat.completions.create({
       messages: [
         {
@@ -46,7 +47,8 @@ export class DeepseekProvider implements AIModelProvider {
       ],
       model: DEEPSEEK_MODEL,
       response_format: { type: 'json_object' },
-      reasoning_effort: 'high',
+      thinking: { type: 'disabled' },
+      // reasoning_effort: 'high',
       stream: false,
     });
 
