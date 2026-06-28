@@ -18,7 +18,8 @@ FROM base AS deps
 # Устанавливает рабочую директорию для контейнера, которая будет использоваться для всех последующих команд
 WORKDIR /app
 
-COPY package.json pnpm-lock.yaml ./
+COPY package.json pnpm-lock.yaml pnpm-workspace.yaml ./
+ENV CI=true
 RUN pnpm install --frozen-lockfile
 
 
