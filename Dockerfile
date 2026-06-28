@@ -32,7 +32,7 @@ WORKDIR /app
 
 COPY . .
 
-RUN pnpm prisma generate
+# RUN pnpm prisma generate
 RUN pnpm build
 
 
