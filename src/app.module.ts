@@ -24,7 +24,7 @@ import { MacroTargetsModule } from './macro-targets/macro-targets.module';
 })
 export class AppModule implements NestModule {
   configure(consumer: MiddlewareConsumer) {
-    // Подключаем middleware для логирования ко всем маршрутам
+    // Подключаем middleware для логирования ко всем маршрута
     consumer.apply(LoggerMiddleware).forRoutes('');
   }
 }
